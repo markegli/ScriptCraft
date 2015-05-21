@@ -50,14 +50,14 @@ var _getProperties = function( o ) {
       }
       typeofProperty = null;
       try { 
-	propValue = o[i];
+        propValue = o[i];
         typeofProperty = typeof propValue;
       } catch( e ) {
         if ( e.message == 'java.lang.IllegalStateException: Entity not leashed' ) {
           // wph 20131020 fail silently for Entity leashing in craftbukkit
         } else {
-	  // don't throw an error during tab completion just make a best effort to 
-	  // do the job.
+          // don't throw an error during tab completion just make a best effort to 
+          // do the job.
         }
       }
       if ( typeofProperty == 'function' ) {
@@ -115,12 +115,14 @@ var onTabCompleteJS = function( ) {
     result,
     cmdSender,
     pluginCmd,
+    cmdLabel,
     cmdArgs;
 
   result = arguments[0];
   cmdSender = arguments[1];
   if (__plugin.bukkit){
     pluginCmd = arguments[2].name;
+    cmdLabel = arguments[3];
     cmdArgs = arguments[4];
   }
   if (__plugin.canary){
@@ -132,11 +134,15 @@ var onTabCompleteJS = function( ) {
   if (__plugin.canary){
     // if 1st element is 'js' then splice
     // there's probably a better way to do this
-    if (cmdArgs[0] == 'js'){ 
+    if (cmdArgs[0] == 'js'){
       cmdArgs = cmdArgs.slice(1);
     }
   }
   if ( pluginCmd == 'jsp' ) {
+    if ( typeof cmdLabel != 'undefined' && cmdLabel != 'jsp' ) {
+      // assume this is a commando alias and push label onto the argument list
+      cmdArgs.unshift(cmdLabel.replace(/^jsp:/i,''));
+    }
     return tabCompleteJSP( result, cmdArgs );
   }
 

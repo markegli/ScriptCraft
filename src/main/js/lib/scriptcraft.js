@@ -620,7 +620,7 @@ function __onEnable ( __engine, __plugin, __script ) {
                 echo(sender, JSON.stringify( jsResult, replacer, 2) );
               }
             } catch ( displayError ) { 
-	      logError('Error while trying to display result: ' + jsResult + ', Error: '+ displayError) ;
+              logError('Error while trying to display result: ' + jsResult + ', Error: '+ displayError) ;
             }
           }
         } 
@@ -639,6 +639,10 @@ function __onEnable ( __engine, __plugin, __script ) {
       }
     }
     if ( cmdName == 'jsp' ) {
+      // aliases to jsp get their label added to the beginning of the arguments
+      if (typeof label != 'undefined' && label != 'jsp') {
+        jsArgs.unshift(label.replace(/^jsp:/i,''));
+      }
       cmdModule.exec( jsArgs, sender );
       result = true;
     }

@@ -22,18 +22,9 @@ namespace so that players can use it simply like this...
 
     /hi
 
-... There are good reasons why ScriptCraft's core `command()` function
-does not do this. Polluting the global namespace with commands would
-make ScriptCraft a bad citizen in that Plugins should be able to work
-together in the same server and - as much as possible - not step on
-each others' toes. The CraftBukkit team have very good reasons for
-forcing Plugins to declare their commands in the plugin.yml
-configuration file. It makes approving plugins easier and ensures that
-craftbukkit plugins behave well together. While it is possible to
-override other plugins' commands, the CraftBukkit team do not
-recommend this. However, as ScriptCraft users have suggested, it
-should be at the discretion of server administrators as to when
-overriding or adding new commands to the global namespace is good.
+... As ScriptCraft users have suggested, it should be at the
+discretion of server administrators as to when overriding or adding
+new commands to the global namespace is good.
 
 So this is where `commando()` comes in. It uses the exact same
 signature as the core `command()` function but will also make the
@@ -61,20 +52,6 @@ of the ScriptCraft core.
 
 ... changes the time of day using a new `/timeofday` command (options are Dawn, Midday, Dusk, Midnight)
 
-### Caveats
-
-Since commands registered using commando are really just appendages to
-the `/jsp` command and are not actually registered globally (it just
-looks like that to the player), you won't be able to avail of tab
-completion for the command itself or its parameters (unless you go the
-traditional route of adding the `jsp` prefix). This plugin uses the
-[PlayerCommandPreprocessEvent][pcppevt] which allows plugins to
-intercepts all commands and inject their own commands instead. If
-anyone reading this knows of a better way to programmatically add new
-global commands for a plugin, please let me know.
-
-[pcppevt]: http://jd.bukkit.org/dev/apidocs/org/bukkit/event/player/PlayerCommandPreprocessEvent.html
-
 ***/
 if (__plugin.canary){
   console.warn('commando plugin is not yet supported in CanaryMod');
@@ -84,7 +61,24 @@ var commands = {};
 
 exports.commando = function( name, func, options, intercepts ) {
   var result = command( name, func, options, intercepts );
-  commands[name] = result;
+  
+  if (name.toLowerCase() == "js" || name.toLowerCase() == "jsp") return;
+  
+  // this hack for registering commands is loosely based on https://bukkit.org/threads/how-to-get-commandmap-with-default-commands.122746/
+  var manager = server.getPluginManager();
+  var mclass = manager.getClass();
+  if (mclass.getName().endsWith('.SimplePluginManager')) {
+    var cmfield = mclass.getDeclaredField("commandMap");
+    cmfield.setAccessible(true);
+    var commandmap = cmfield.get(manager);
+    
+    // re-register the jsp command under the new name
+    commandmap.register(name, "jsp", commandmap.getCommand("jsp"));
+  }
+  else {
+    // fallback to old PlayerCommandPreprocessEvent behavior
+    commands[name] = result;
+  }
   return result;
 };
 
