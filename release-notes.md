@@ -1,5 +1,26 @@
 RELEASE NOTES
 =============
+3.1.8 Release (2015 06 07)
+--------------------------
+Bug fix: Fixes drone on Spigot 1.8.7 with JDK 7 see 
+https://github.com/walterhiggins/ScriptCraft/issues/254
+
+
+3.1.7 Release (2015 06 07)
+--------------------------
+Added workaround for https://bugs.openjdk.java.net/browse/JDK-8072596 to recipes module.
+
+3.1.6 Release (2015 05 31)
+--------------------------
+Provide more helpful error messages when trying to require modules which don't exist e.g. 
+require('greetings') should fail but indicate if there's a 'greeting' module present instead.
+
+Fixes problem with Fireworks module on Mac OS.
+
+3.1.5 Release (2015 05 31)
+--------------------------
+CanaryMod version : Add events.connect as synonym for events.connnection for backward-compatibility
+with 1.7.9 and book listings.
 
 3.1.4 Release (2015 05 09)
 --------------------------
