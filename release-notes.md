@@ -1,5 +1,62 @@
 RELEASE NOTES
 =============
+
+3.2.1 Release (2016 12 23)
+--------------------------
+
+Bug fixes and updated from Spigot 1.9 to Spigot 1.11.2
+
+3.2.0 Release (2016 03 20)
+--------------------------
+
+Bug fixes and updated from Spigot 1.8.8 to Spigot 1.9
+ 
+Fixed issues #256 and #287
+
+3.1.12 Release (2015 12 30)
+---------------------------
+
+Added new modules 
+
+* lightning
+
+The entities module and lightning module are now documented.
+
+To make lightning strikes when and where any arrow lands:
+
+    var lightning = require('lightning');
+    events.projectileHit( function( event ) {
+      if (entities.arrow( event.projectile ) 
+        lightning( event.projectile );
+    });
+
+3.1.11 Release (2015 11 21)
+---------------------------
+
+Added new modules
+
+* entities
+* spawn
+
+And new Drone function `spawn()` 
+
+To use:
+Point at a block then type...
+```
+/js spawn('ZOMBIE').fwd().times(5).right().back(5).times(6)
+```
+
+... unleash a horde of zombies (in 5x6 grid formation).
+
+3.1.10 Release (2015 08 16)
+---------------------------
+Bug fix: modules/bukkit/sounds.js now works (fixed for Bukkit/SpigotMC/Glowstone)
+
+3.1.9 Release (2015 08 01)
+--------------------------
+Bug fix: minigames/scoreboard.js module's updatePlayerScore() function did not work with latest version of CanaryMod. 
+Using /scoreboard command instead. See https://github.com/walterhiggins/ScriptCraft/issues/261
+
 3.1.8 Release (2015 06 07)
 --------------------------
 Bug fix: Fixes drone on Spigot 1.8.7 with JDK 7 see 
